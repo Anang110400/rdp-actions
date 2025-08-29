@@ -25,6 +25,5 @@ jobs:
     - name: Jalankan Cloudflare Tunnel (RDP)
       run: |
         Start-Process -FilePath .\cloudflared.exe -ArgumentList "tunnel --url tcp://localhost:3389" -NoNewWindow
-        Start-Sleep -Seconds 20
-        Invoke-WebRequest -Uri http://127.0.0.1:4040/api/tunnels -OutFile tunnels.json -ErrorAction SilentlyContinue
-        Get-Content tunnels.json || echo "⚠️ Buka log di atas, akan ada link tunnel cloudflare"
+        Start-Sleep -Seconds 10
+        echo "✅ Cek log di atas, akan muncul link tcp://xxx.trycloudflare.com:xxxxx"
