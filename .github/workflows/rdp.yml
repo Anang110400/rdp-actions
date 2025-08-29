@@ -18,11 +18,13 @@ jobs:
         net user githubRDP Password123! /add
         net localgroup administrators githubRDP /add
 
-    - name: Info Login
+    - name: Download Cloudflare Tunnel
       run: |
-        echo "======================================"
-        echo "✅ RDP Aktif!"
-        echo "Username: githubRDP"
-        echo "Password: Password123!"
-        echo "IP: $(hostname -I)"
-        echo "======================================"
+        Invoke-WebRequest https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-windows-amd64.exe -OutFile cloudflared.exe
+
+    - name: Jalankan Cloudflare Tunnel (RDP)
+      run: |
+        Start-Process -FilePath .\cloudflared.exe -ArgumentList "tunnel --url tcp://localhost:3389" -NoNewWindow
+        Start-Sleep -Seconds 20
+        Invoke-WebRequest -Uri http://127.0.0.1:4040/api/tunnels -OutFile tunnels.json -ErrorAction SilentlyContinue
+        Get-Content tunnels.json || echo "⚠️ Buka log di atas, akan ada link tunnel cloudflare"
